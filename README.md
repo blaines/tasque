@@ -1,5 +1,5 @@
 # Tasque
-## An easy to use framework for background tasks in Ruby
+## An easy to use gem for background tasks in Ruby
 
 Tasque is designed to be flexible, scalable, and do as little as possible. It's multi threaded, and allows developers to easily leverage all available system resources. Anyone can create input adapters for Tasque to receive messages for processing.
 
