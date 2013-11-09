@@ -8,6 +8,7 @@ module Tasque
     module ClassMethods
 
       def run!
+        Tasque.reset
         begin_startup!
         begin_processing!
       end
