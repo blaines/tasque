@@ -25,6 +25,18 @@ module Tasque
     @queue ||= Queue.new
   end
 
+  def self.config
+    Configuration.instance
+  end
+
+  def self.configure
+    yield config
+  end
+
+  def self.logger
+    config.logger
+  end
+
   def self.enqueue(message)
     queue << message
   end
