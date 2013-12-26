@@ -18,7 +18,7 @@ require 'yaml'
 module Tasque
   class Configuration
     include Singleton
-    attr_accessor :threads, :stomp
+    attr_accessor :threads, :verbose, :stomp
 
     def self.default_logger
       logger = Logger.new(STDOUT)
@@ -29,10 +29,32 @@ module Tasque
     def self.defaults
       @defaults ||= {
         :threads => 1,
+        :verbose => true
       }
     end
 
     def initialize
       self.class.defaults.each_pair { |k, v| send("#{k}=", v) }
     end
+
+    def from_file(filename)
+      hash = load_file(filename)
+      merge!(hash)
+    end
+
+    def from_options(options)
+      merge!({
+        threads: options[:threads]
+        verbose: options[:verbose]
+      })
+    end
+
+    def load_file(filename)
+      YAML.load_file(filename)
+    end
+
+    def merge!(hash)
+      hash.each_pair { |k, v| send("#{k}=", v) }
+    end
+  end
 end
