@@ -56,5 +56,18 @@ module Tasque
     def merge!(hash)
       hash.each_pair { |k, v| send("#{k}=", v) }
     end
+
+    # Notify those not using jruby that additional threads are not really valuable.
+    def threads=(int)
+      if RUBY_ENGINE == 'jruby'
+        @threads = int
+      elsif int > 1
+        puts "########################################################"
+        puts "# One thread has been measured best performing on MRI. #"
+        puts "# Use JRuby for additional concurrency.                #"
+        puts "########################################################"
+        @threads = 1
+      end
+    end
   end
 end
