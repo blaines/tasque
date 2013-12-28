@@ -21,10 +21,6 @@ module Tasque
     end
   end
 
-  def self.queue
-    @queue ||= Queue.new
-  end
-
   def self.config
     Configuration.instance
   end
@@ -37,8 +33,16 @@ module Tasque
     config.logger
   end
 
+  def self.queue
+    @queue ||= Queue.new
+  end
+
   def self.enqueue(message)
     queue << message
+  end
+
+  def self.dequeue
+    queue.pop
   end
 
   def started_at
