@@ -9,18 +9,18 @@ module Tasque
 
       def run!
         Tasque.reset
-        begin_startup!
+        begin_setup!
         begin_processing!
       end
 
-      def begin_startup!
-        startup
-      rescue => exception
-        raise "#{exception.inspect} occured during startup"
-      end
-      private :begin_startup!
+      def setup; end
 
-      def startup; end
+      def begin_setup!
+        setup
+      rescue => exception
+        raise "#{exception.inspect} occured during setup"
+      end
+      private :begin_setup!
 
       def begin_processing!
         Tasque.threads = 1.times.map do
@@ -42,10 +42,9 @@ module Tasque
         end
       end
       private :new_processing_thread
-
-      def process(message); end
-
     end
+
+    def process(message); end
 
   end
 end
