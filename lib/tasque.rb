@@ -1,21 +1,24 @@
 require_relative 'tasque/worker'
+require_relative 'tasque/configuration'
 
 module Tasque
 
   def self.reset
-    @messages_in = 0
-    @messages_out = 0
-    @semaphore_messages_in = Mutex.new
-    @semaphore_messages_out = Mutex.new
+    @messages_push = 0
+    @messages_pop = 0
+    @semaphore_messages_push = Mutex.new
+    @semaphore_messages_pop = Mutex.new
   end
 
   def self.increment_messages_push
+    Tasque.logger.info "I"
     @semaphore_messages_push.synchronize do
       @messages_push += 1
     end
   end
 
   def self.increment_messages_pop
+    Tasque.logger.info "O"
     @semaphore_messages_pop.synchronize do
       @messages_pop += 1
     end
@@ -38,11 +41,14 @@ module Tasque
   end
 
   def self.enqueue(message)
+    increment_messages_push
     queue << message
   end
 
   def self.dequeue
-    queue.pop
+    message = queue.pop
+    increment_messages_pop
+    message
   end
 
   def started_at
@@ -59,6 +65,10 @@ module Tasque
 
   def self.threads
     @threads
+  end
+
+  def self.stop?
+    @messages_push == @messages_pop
   end
 
 end

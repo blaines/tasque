@@ -1,4 +1,6 @@
 require 'yaml'
+require 'singleton'
+require 'logger'
 # tasque:
 #   threads: 3
 # stomp:
@@ -18,7 +20,7 @@ require 'yaml'
 module Tasque
   class Configuration
     include Singleton
-    attr_accessor :threads, :verbose, :stomp
+    attr_accessor :threads, :verbose, :stomp, :logger
 
     def self.default_logger
       logger = Logger.new(STDOUT)
@@ -28,8 +30,9 @@ module Tasque
 
     def self.defaults
       @defaults ||= {
-        :threads => 1,
-        :verbose => true
+        threads: 1,
+        verbose: true,
+        logger: default_logger
       }
     end
 
@@ -44,7 +47,7 @@ module Tasque
 
     def from_options(options)
       merge!({
-        threads: options[:threads]
+        threads: options[:threads],
         verbose: options[:verbose]
       })
     end
